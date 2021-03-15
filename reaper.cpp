@@ -7,6 +7,11 @@
 #include <stdio.h>
 #include <errno.h>
 
+#ifndef PR_SET_CHILD_SUBREAPER
+	// scout runtime's linux/prctl.h is too old
+	#define PR_SET_CHILD_SUBREAPER 36
+#endif
+
 int main( int argc, char **argv )
 {
 	int sub_command_argc = 0;
@@ -50,7 +55,7 @@ int main( int argc, char **argv )
 	pid_t wait_ret;
 	while( true )
 	{
-		wait_ret = wait( nullptr );
+		wait_ret = wait( NULL );
 
 		if ( wait_ret == -1 && errno == ECHILD )
 		{
